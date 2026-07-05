@@ -22,7 +22,7 @@ sample_data = {
         "Dengan hormat, kami mengundang Anda untuk hadir dalam rapat bulanan.",
         "Terlampir laporan bulanan untuk bulan Juni 2026.",
         "Berikut informasi penting yang perlu Anda ketahui.",
-        "Mohon konfirmasi data Anda sebelum tanggal 5 Juli 2026.",jjjjjjjjj
+        "Mohon konfirmasi data Anda sebelum tanggal 5 Juli 2026.",
     ],
     "Attachment":   ["", "", "", ""],
     "Status":       ["", "", "", ""],
