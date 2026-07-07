@@ -147,6 +147,266 @@ Contoh: jika file ada di `attachments/laporan.pdf`, isi kolom dengan `laporan.pd
 
 ---
 
+---
+
+# 🚀 Cara Menggunakan
+
+Ikuti langkah-langkah berikut untuk menjalankan aplikasi **Email Automation**.
+
+## 1. Siapkan File Excel
+
+Pastikan file Excel berada di folder:
+
+```text
+data/data_email.xlsx
+```
+
+Jika belum memiliki file Excel, buat file contoh dengan menjalankan:
+
+```bash
+python create_sample_excel.py
+```
+
+Kemudian isi data penerima email.
+
+Contoh:
+
+| Nama | Email | Subject | Message | Attachment |
+|------|-------|---------|----------|------------|
+| Andi | andi@gmail.com | Halo Andi | Selamat pagi, Andi! | |
+| Budi | budi@gmail.com | Laporan | Terlampir laporan. | laporan.pdf |
+
+> **Catatan:** Kolom `Status`, `Error`, dan `Tanggal Kirim` tidak perlu diisi karena akan diisi otomatis oleh program.
+
+---
+
+## 2. Tambahkan Lampiran (Opsional)
+
+Jika ingin mengirim lampiran:
+
+1. Salin file ke folder:
+
+```text
+attachments/
+```
+
+Contoh struktur folder:
+
+```text
+attachments/
+├── laporan.pdf
+├── invoice.xlsx
+└── gambar.png
+```
+
+Kemudian isi kolom **Attachment** di Excel menggunakan **nama file saja**.
+
+Contoh yang benar:
+
+```text
+laporan.pdf
+```
+
+Contoh yang salah:
+
+```text
+attachments/laporan.pdf
+```
+
+atau
+
+```text
+D:\Project\attachments\laporan.pdf
+```
+
+---
+
+## 3. Isi Konfigurasi Email
+
+Buka file:
+
+```text
+.env
+```
+
+Pastikan seluruh konfigurasi sudah diisi.
+
+Contoh:
+
+```env
+EMAIL_ADDRESS=emailanda@gmail.com
+EMAIL_PASSWORD=xxxxxxxxxxxxxxxx
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+```
+
+---
+
+## 4. Aktifkan Virtual Environment
+
+Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+Linux / macOS:
+
+```bash
+source venv/bin/activate
+```
+
+Jika berhasil, terminal akan menampilkan nama virtual environment di awal baris, misalnya:
+
+```text
+(venv) D:\Email_Automation>
+```
+
+---
+
+## 5. Jalankan Program
+
+```bash
+python main.py
+```
+
+Program akan melakukan proses berikut secara otomatis:
+
+1. Membaca file Excel.
+2. Memvalidasi data penerima email.
+3. Menghubungkan ke SMTP Server.
+4. Login menggunakan akun email.
+5. Mengirim email satu per satu.
+6. Menambahkan lampiran jika tersedia.
+7. Menyimpan status pengiriman ke Excel.
+8. Menyimpan log ke folder `logs/`.
+9. Menampilkan ringkasan hasil pengiriman.
+
+---
+
+## 6. Periksa Hasil Pengiriman
+
+Setelah program selesai, buka kembali file:
+
+```text
+data/data_email.xlsx
+```
+
+Kolom berikut akan terisi otomatis:
+
+| Status | Error | Tanggal Kirim |
+|--------|-------|---------------|
+| Terkirim | | 2026-06-30 09:10 |
+| Gagal | Format email tidak valid | |
+| Terkirim | | 2026-06-30 09:12 |
+
+Keterangan:
+
+- **Terkirim** → Email berhasil dikirim.
+- **Gagal** → Email gagal dikirim. Penyebabnya dapat dilihat pada kolom **Error**.
+
+---
+
+## 7. Lihat File Log
+
+Seluruh aktivitas program disimpan di folder:
+
+```text
+logs/
+```
+
+Contoh:
+
+```text
+logs/
+└── email_automation_2026-06-30.log
+```
+
+Isi log akan mencatat seluruh aktivitas program, seperti:
+
+- Program dimulai
+- Membaca file Excel
+- Login SMTP
+- Email berhasil dikirim
+- Validasi gagal
+- Lampiran tidak ditemukan
+- Ringkasan hasil pengiriman
+
+Log sangat membantu untuk proses debugging jika terjadi masalah.
+
+---
+
+## 8. Menjalankan Program Kembali
+
+Program secara otomatis akan **melewati** email yang sudah memiliki status **Terkirim**.
+
+Contoh:
+
+| Nama | Status |
+|------|---------|
+| Andi | Terkirim |
+| Budi | Gagal |
+| Cici | |
+
+Ketika program dijalankan kembali:
+
+- ✅ Andi akan dilewati.
+- ✅ Budi akan dicoba kembali.
+- ✅ Cici akan dikirim.
+
+Jika ingin mengirim ulang seluruh email, kosongkan isi kolom berikut pada file Excel:
+
+- `Status`
+- `Error`
+- `Tanggal Kirim`
+
+Kemudian jalankan kembali:
+
+```bash
+python main.py
+```
+
+---
+
+## 🔄 Alur Kerja Program
+
+```text
+                Mulai
+                   │
+                   ▼
+      Membaca File Excel
+                   │
+                   ▼
+      Validasi Data Penerima
+                   │
+                   ▼
+       Login ke SMTP Server
+                   │
+                   ▼
+    Mengirim Email Satu per Satu
+           │               │
+           │               │
+      Berhasil          Gagal
+           │               │
+           ▼               ▼
+ Update Status       Update Status
+ = Terkirim          = Gagal
+ Simpan Waktu        Simpan Error
+           │               │
+           └───────┬───────┘
+                   ▼
+          Simpan File Excel
+                   │
+                   ▼
+            Simpan File Log
+                   │
+                   ▼
+      Tampilkan Ringkasan Hasil
+                   │
+                   ▼
+                Selesai
+```
+
 ## ▶️ Cara Menjalankan Program
 
 ```bash
